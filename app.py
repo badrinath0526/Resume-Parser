@@ -5,6 +5,8 @@ import spacy
 import pdfplumber
 import re
 from transformers import pipeline
+import nltk
+
 app=Flask(__name__)
 # UPLOAD_FOLDER="./uploads"
 # app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
@@ -14,7 +16,7 @@ nlp=spacy.load("en_core_web_sm")
 t5_pipeline=pipeline("text2text-generation",model="google/flan-t5-large",tokenizer="google/flan-t5-large")
 
 
-ALLOWED_EXTENSIONS={'pdf','docx'}
+ALLOWED_EXTENSIONS={'pdf'}
 
 def allowed_filename(filename):
     return '.' in filename and filename.rsplit('.',1)[1].lower() in ALLOWED_EXTENSIONS
@@ -26,8 +28,21 @@ def extract_text(file_path):
             text+=page.extract_text()
         return text
 
+def extract_organization(text):
+    keywords=['Work History','Employment','Professional Background','Work Experience','Professional Experience','Employment History',
+          'EXPERIENCE','WORK HISTORY','EMPLOYMENT','PROFESSIONAL BACKGROUND','WORK EXPERIENCE','PROFESSIONAL EXPERIENCE','EMPLOYMENT HISTORY','Experience']
+    for keyword in keywords :
+        if keyword in text:
+            start=text.find(keyword)
+        
+            return text[start:start+700]
+    return text
+
+
 def parse_resume(file_path):
     text=extract_text(file_path)
+    organization_section=extract_organization(text)
+    # print(organization_section)
     email=None
     pattern=r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.?[A-Za-z]{2,}\b"
     match=re.search(pattern,text)
@@ -43,11 +58,11 @@ def parse_resume(file_path):
     email=email or "Email not found"
 
             
-    job_title_prompt=f"Extract the job title from the following resume text: \n{text[:150]}"
+    job_title_prompt=f"Extract the job title from the following resume text. Return only the job title.\n{text}"
     job_title_result=t5_pipeline(job_title_prompt,max_length=100,num_return_sequences=True)
     job_title=job_title_result[0]['generated_text']
 
-    organization_prompt=f"Extract the current organization name from the following resume text: \n{text}"
+    organization_prompt=f"Identify the most recently worked organization name from the following resume text. \n{organization_section}"
     organization_result=t5_pipeline(organization_prompt,max_length=100,num_return_sequences=True)
     current_organization=organization_result[0]['generated_text']
 
