@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="widt=device-width, initial-scale=1.0">
+        <title>Resume Parser</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+<body>
+    <div class="container">
+        <h2>Resume Parse</h2>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="file-input">
+                <label for="file">Upload your resume(PDF only):</label>
+                <input type="file" id="file" name="file" accept=".pdf" required >
+            </div>
+            <button type="submit" class="submit-btn">Upload and Parse</button>
+        </form>
+
+        <div class="loading" id="loading">
+            <span></span>
+            <!-- <span></span>
+            <span></span> -->
+        </div>
+
+        <div class="results" id="results">
+            <h3>Parsed Results:</h3>
+            <p><strong>Email:</strong><span id="email"></span></p>
+            <p><strong>Job Title:</strong><span id="jobTitle"></span></p>
+            <p><strong>Current Organization:</strong><span id="currentOrganization"></span></p>
+        </div>
+    </div>
+    <script>
+        document.getElementById("uploadForm").addEventListener('submit',async function (event) {
+            event.preventDefault()
+            const fileInput=document.getElementById('file')
+            const file=fileInput.files[0]
+            if(!file){
+                alert("Please select a file to upload")
+                return;
+            }
+            const formData=new FormData()
+            formData.append('file',file)
+
+            document.getElementById('loading').style.display='block'
+            document.getElementById('results').style.display='none'
+
+            try{
+                const response= await fetch('parse-resume',{
+                    method:'POST',
+                    body:formData
+                });
+                if(!response.ok){
+                    throw new Error(`HTTP error! status: ${response.status}`)
+                }
+
+                const result= await response.json()
+
+                document.getElementById('results').style.display='block';
+                document.getElementById('email').textContent=result.Email || "Not Found"
+                document.getElementById('jobTitle').textContent=result['Job title'] || "Not found";
+                document.getElementById('currentOrganization').textContent=result['Current organization'] || "Not found"
+
+            }catch(error){
+                console.error("Error parsing resume:", error)
+                alert("An error occurred  while parsing the resume. Please try again")
+            }finally{
+                document.getElementById('loading').style.display='none'
+            }
+
+        })
+    </script>
+</body>
+</html>
