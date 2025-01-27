@@ -75,8 +75,6 @@ def parse_resume(file_path):
         job_title_result=t5_pipeline(job_title_prompt,max_length=100,num_return_sequences=True)
         job_title=job_title_result[0]['generated_text']
 
-        if job_title not in known_job_titles:
-            known_job_titles.add(job_title)
 
 
     organization_prompt=f"Identify the most recently worked organization name from the following resume text. \n{organization_section}"

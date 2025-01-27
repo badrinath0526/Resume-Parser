@@ -13,7 +13,7 @@ document.getElementById("uploadForm").addEventListener('submit',async function (
     document.getElementById('results').style.display='none'
 
     try{
-        const response= await fetch('parse-resume',{
+        const response= await fetch('/parse-resume',{
             method:'POST',
             body:formData
         });
@@ -22,14 +22,12 @@ document.getElementById("uploadForm").addEventListener('submit',async function (
         }
 
         const result= await response.json()
-        const resumeId=result.resume_id
-        // console.log(result)
+        
 
         document.getElementById('results').style.display='block';
         document.getElementById('email').value=result['Email'] || "Not Found"
         document.getElementById('jobTitle').value=result['Job title'] || "Not found";
         document.getElementById('currentOrganization').value=result['Current organization']|| "Not found"
-        document.getElementById("resumeId").value=resumeId
 
     }catch(error){
         console.error("Error parsing resume:", error)
@@ -46,7 +44,6 @@ document.getElementById("editForm").addEventListener('submit',async function (ev
         email:document.getElementById('email').value,
         jobTitle:document.getElementById('jobTitle').value,
         currentOrganization:document.getElementById('currentOrganization').value,
-        resume_id:resumeId
     };
 
     try{
