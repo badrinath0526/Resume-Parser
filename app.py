@@ -109,28 +109,29 @@ def upload_file():
         return jsonify({"Error":"No selected file"}),400
     
     if file and allowed_filename(file.filename):
-        # filename=secure_filename(file.filename)
-        # file_path=os.path.join(app.config['UPLOAD_FOLDER'],filename)
-        # file.save(file_path)
-
         result=parse_resume(file)
         return jsonify(result),200
     return jsonify({'error':'Invalid file formats'}),400
 
 @app.route("/submit-resume",methods=['POST'])
 def submit_resume():
-    data=request.json()
-    print(data)
-    email=data.get("Email")
-    job_title=data.get("Job title")
-    organization=data.get("Current organization")
+    data=request.json
+    email=data.get("email")     
+    job_title=data.get("jobTitle")
+    organization=data.get("currentOrganization")
 
-    query="insert into resumes(email,job_title,organization) values(%s %s %s)"
-    values=(email,job_title,organization)
-    cursor.execute(query,values)
-    db.commit()
-
-    return jsonify({"message":"Resume details successfully stored in the database"})
+    if not email or not job_title or not organization:
+        return jsonify({"error":"Missing required fields"})
+    
+    try:
+        query="insert into resumes(email,job_title,organization) values(%s, %s, %s);"
+        values=(email,job_title,organization)
+        cursor.execute(query,values)
+        db.commit()
+        return jsonify({"message":"Resume details successfully stored in the database"})
+    except Exception as e:
+        print(f"Error:{e}")
+        return jsonify({"error":"Failed to save the details"})
 
 if __name__=='__main__':
-    app.run(host='192.168.10.169',port=5000,debug=True)
+    app.run(host='192.168.10.169',port=5000,debug=True) 
