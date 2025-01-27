@@ -25,9 +25,21 @@
 
         <div class="results" id="results">
             <h3>Parsed Results:</h3>
-            <p><strong>Email:</strong><span id="email"></span></p>
-            <p><strong>Job Title:</strong><span id="jobTitle"></span></p>
-            <p><strong>Current Organization:</strong><span id="currentOrganization"></span></p>
+            <form id="editForm">
+                <div class="result-row">
+                    <label for="email">Email:</label>
+                    <input type="text" id="email" name="email" />
+                </div>
+                <div class="result-row">
+                    <label for="jobTitle">Job title:</label>
+                    <input type="text" id="jobTitle" name="jobTitle" />
+                </div>
+                <div class="result-row">
+                    <label for="currentOrganization">Current Organization:</label>
+                    <input type="text" id="currentOrganization" name="currentOrganization" />
+                </div>
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
         </div>
     </div>
     <script>
@@ -57,9 +69,9 @@
                 const result= await response.json()
 
                 document.getElementById('results').style.display='block';
-                document.getElementById('email').textContent=result.Email || "Not Found"
-                document.getElementById('jobTitle').textContent=result['Job title'] || "Not found";
-                document.getElementById('currentOrganization').textContent=result['Current organization'] || "Not found"
+                document.getElementById('email').textContent=result.email || "Not Found"
+                document.getElementById('jobTitle').textContent=result.jobTitle || "Not found";
+                document.getElementById('currentOrganization').textContent=result.currentOrganization|| "Not found"
 
             }catch(error){
                 console.error("Error parsing resume:", error)
@@ -68,6 +80,32 @@
                 document.getElementById('loading').style.display='none'
             }
 
+        })
+        document.getElementById("editForm").addEventListener('submit',async function (event) {
+            event.preventDefault()
+            // const formData=new FormData(event.target)
+            const data={
+                email:document.getElementById('email').value,
+                jobTitle:document.getElementById('jobTitle').value,
+                currentOrganization:document.getElementById('currentOrganization').value
+            };
+            try{
+                const response=await fetch('/submit-resume',{
+                    method:'POST',
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    body:JSON.stringify(data)
+                })
+                if(!response.ok){
+                    throw new Error(`HTTP error! status: ${response.status}`)
+                }
+                const result=await response.json()
+                alert(result.message || "Details successfully submitted!")
+            }catch(error){
+                console.error("Error submitting resume: ",error.message)
+                alert("An error occurred while submitting the details. Please try again")
+            }
         })
     </script>
 </body>
