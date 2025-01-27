@@ -1,11 +1,8 @@
 from flask import Flask,request,jsonify,render_template
-from werkzeug.utils import secure_filename
-import os 
 import spacy
 import pdfplumber
 import re
 from transformers import pipeline
-import nltk
 import mysql.connector
 
 db=mysql.connector.connect(
