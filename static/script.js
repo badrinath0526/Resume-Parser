@@ -20,14 +20,32 @@ document.getElementById("uploadForm").addEventListener('submit',async function (
         if(!response.ok){
             throw new Error(`HTTP error! status: ${response.status}`)
         }
-
         const result= await response.json()
-        
+        console.log(result)
+
+        const response2=await fetch("http://192.168.10.130:5000/extract",{
+            method:'POST',
+            body:formData
+        })
+        if(!response2.ok){
+            throw new Error(`HTTP error! status: ${response2.status}`)
+        }
+
+        const result2=await response2.json()
+        console.log(result2)
 
         document.getElementById('results').style.display='block';
         document.getElementById('email').value=result['Email'] || "Not Found"
         document.getElementById('jobTitle').value=result['Job title'] || "Not found";
         document.getElementById('currentOrganization').value=result['Current organization']|| "Not found"
+        document.getElementById('name').value=result2['name'] || "Not found"
+        document.getElementById("college").value=result2['college']||"Not found"
+        document.getElementById('degree').value=result2['degree'] || "Not found"
+        document.getElementById('passOutYear').value=result2['passOutYear'] ||"Not found"
+        document.getElementById('phoneNo').value=result2['phoneNo'] ||"Not found"
+        document.getElementById('yearsOfExp').value=result2['yearsOfExp']||"Not found"
+
+        
 
     }catch(error){
         console.error("Error parsing resume:", error)
@@ -37,6 +55,9 @@ document.getElementById("uploadForm").addEventListener('submit',async function (
     }
 
 })
+
+
+
 document.getElementById("editForm").addEventListener('submit',async function (event) {
     event.preventDefault()
     // const formData=new FormData(event.target)
@@ -44,10 +65,16 @@ document.getElementById("editForm").addEventListener('submit',async function (ev
         email:document.getElementById('email').value,
         jobTitle:document.getElementById('jobTitle').value,
         currentOrganization:document.getElementById('currentOrganization').value,
+        name:document.getElementById('name').value,
+        college:document.getElementById("college").value,
+        degree:document.getElementById("degree").value,
+        passOutYear:document.getElementById('passOutYear').value,
+        phoneNo:document.getElementById('phoneNo').value,
+        yearsOfExp:document.getElementById('yearsOfExp').value
     };
 
     try{
-        const response=await fetch('/submit-resume',{
+        const response=await fetch('http://192.168.10.130:5000/values',{
             method:'POST',
             headers:{
                 'Content-Type':'application/json'
@@ -57,8 +84,9 @@ document.getElementById("editForm").addEventListener('submit',async function (ev
         if(!response.ok){
             throw new Error(`HTTP error! status: ${response.status}`)
         }
-        const result=await response.json()
-        alert(result.message || "Details successfully submitted!")
+        const res=await response.json()
+        console.log(res)
+        alert(res.message)
     }catch(error){
         console.error("Error submitting resume: ",error)
         alert("An error occurred while submitting the details. Please try again")
