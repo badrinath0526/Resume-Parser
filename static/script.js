@@ -74,6 +74,24 @@ document.getElementById("editForm").addEventListener('submit',async function (ev
     };
 
     try{
+        const res1=await fetch("/add-job-title",{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({jobTitle:data.jobTitle})
+        })
+        const job_title_result=await res1.json()
+        if(res1.ok){
+            console.log(job_title_result.message)
+        }else{
+            console.error(job_title_result.error)
+        }
+    }catch(error){
+        console.error("Error communicating with local Flask API",error)
+        alert("an error occurred storing job title")
+    }
+        try{
         const response=await fetch('http://192.168.10.130:5000/values',{
             method:'POST',
             headers:{
