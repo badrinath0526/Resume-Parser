@@ -18,7 +18,7 @@ skills = {
    "databases": [
        "MySQL", "PostgreSQL", "SQLite", "MariaDB", "Microsoft SQL Server", "Oracle Database",
        "MongoDB", "Cassandra", "Redis", "DynamoDB", "CouchDB", "Neo4j",
-       "Firebase Firestore", "Amazon RDS", "Google BigQuery", "Snowflake"
+       "Firebase Firestore", "Amazon RDS", "Google BigQuery", "Snowflake","SQL"
    ],
    "other_skills": [
        "Jenkins", "GitHub Actions", "GitLab CI", "CircleCI", "Travis CI",

@@ -2,7 +2,7 @@ import json
 import os
 
 # File handling
-ALLOWED_EXTENSIONS = {'pdf'}
+ALLOWED_EXTENSIONS = {'pdf','docx'}
 
 def allowed_filename(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
