@@ -39,4 +39,4 @@ def handle_job_title():
         return jsonify({"error": "Failed to save in json file"})
 
 if __name__ == '__main__':
-    app.run(host='192.168.10.169', port=5000, debug=True)
+    app.run(host='192.168.10.172', port=5000, debug=True)

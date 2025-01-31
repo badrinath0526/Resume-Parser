@@ -17,6 +17,14 @@
             </div>
             <button type="submit" class="upload-btn">Upload and Parse</button>
         </form>
+        <form id="searchForm" class="search-form">
+            <div class="search-input">
+                <!-- <label for="phoneNumber">Search by phone number:</label> -->
+                <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Enter phone number" class="search-bar">
+            </div>
+            <button type="submit" class="search-btn">Search</button>
+        </form>
+
         <div class="loading" id="loading">
             <span></span>
         </div>
@@ -83,14 +91,17 @@
             </div>
             <div class="result-row">
             <h5>Frontend Skills:</h5>
+      
             <textarea type="text" name="frontend_skills" id="frontend_skills"></textarea>
             </div>
             <div class="result-row">
             <h5>Backend skills:</h5>
+      
             <textarea type="text" name="backend_skills" id="backend_skills"></textarea>
             </div>
             <div class="result-row">
             <h5>Databases:</h5>
+            
             <textarea type="text" name="databases" id="databases"></textarea>
             </div>
             <div class="result-row">
