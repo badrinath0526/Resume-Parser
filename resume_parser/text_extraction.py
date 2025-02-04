@@ -6,6 +6,7 @@ from resume_parser.job_title_extraction import extract_job_title_from_dict
 from resume_parser.skills_extraction import extract_skills
 from io import BytesIO
 from docx import Document
+import fitz
 nlp = spacy.load("en_core_web_sm")
 t5_pipeline=pipeline("text2text-generation",model="google/flan-t5-large",tokenizer="google/flan-t5-large")
 
@@ -37,12 +38,14 @@ def extract_text(file):
     return text
 
 def extract_organization(text):
-    keywords = ['Work History', 'Employment', 'Professional Background', 'Work Experience', 'Professional Experience', 'Employment History']
+
+    keywords=['Work History','Employment','Professional Background','Work Experience','Professional Experience','Employment History',
+          'EXPERIENCE','WORK HISTORY','EMPLOYMENT','PROFESSIONAL BACKGROUND','WORK EXPERIENCE','PROFESSIONAL EXPERIENCE','EMPLOYMENT HISTORY','Experience']    
     for keyword in keywords:
         if keyword in text:
             start = text.find(keyword)
             return text[start:start + 700]
-    return text
+        return text
 
 def parse_resume(file_path):
     text = extract_text(file_path)
@@ -68,7 +71,7 @@ def parse_resume(file_path):
         job_title_result = t5_pipeline(job_title_prompt, max_length=100, num_return_sequences=True)
         job_title = job_title_result[0]['generated_text']
 
-    organization_prompt = f"From the following resume text, extract the name of the most recent organization the candidate has worked for. Focus only on work history and return the organization name: \n{organization_section}"
+    organization_prompt = f"From the following resume text, extract the most recent organization name the candidate is working. Return only the name of the organization: \n{organization_section}"
     organization_result = t5_pipeline(organization_prompt, max_length=100, num_return_sequences=True)
     current_organization = organization_result[0]['generated_text']
 
@@ -78,5 +81,6 @@ def parse_resume(file_path):
         "Email": email,
         "Job title": job_title.strip(),
         "Current organization": current_organization.strip(","),
+        # "Extracted skills":extracted_skills
         **extracted_skills
     }

@@ -3,7 +3,12 @@ document.getElementById("searchForm").addEventListener('submit', async function 
     const phoneNumber = document.getElementById("phoneNumber").value;
 
     if (!phoneNumber) {
-        alert("Please enter a phone number");
+        alert("Please enter a valid phone number");
+        return;
+    }
+
+    if(phoneNumber.length>10){
+        alert("Phone number cannot be more than 10 digits")
         return;
     }
 
@@ -28,15 +33,29 @@ document.getElementById("searchForm").addEventListener('submit', async function 
         // If data is found, populate the form fields
         if (data) {
             document.getElementById('results').style.display='block';
+
             document.getElementById('email').value = data['email'] || "Not Found";
             document.getElementById('jobTitle').value = data['jobTitle'] || "Not Found";
             document.getElementById('currentOrganization').value = data['organization'] || "Not Found";
+            document.getElementById('frontend_skills').value=data['fs']||'Not found';
+            document.getElementById('backend_skills').value=data['bs']||'Not found';
+            document.getElementById('other_skills').value=data['os']||'Not found';
+            document.getElementById('programming_languages').value=data['pl']||'Not found';
+            document.getElementById('databases').value=data['ds']||'Not found';
+         
             document.getElementById('name').value = data['name'] || "Not Found";
-            document.getElementById('degree1').value=data['degree']||'Not Found'
-            document.getElementById('college').value=data['college']||'Not Found'
-            document.getElementById('passOutYear').value=data['passOutYear']||'Not Found'
+            document.getElementById('degree1').value=data['degree1']||'Not Found'
+            document.getElementById('college').value=data['college1']||'Not Found'
+            document.getElementById('percentage1').value=data['percentage1']||'Not found'
+            document.getElementById('passOutYear1').value=data['passOutYear1']||'Not Found'
             document.getElementById('yearsOfExp').value=data['yearsOfExp']||'Not Found'
             document.getElementById('phoneNo').value = phoneNumber;
+            document.getElementById('summary').value=data['summary']||'Not found'
+            document.getElementById('college2').value=data['college2']||'Not found'
+            document.getElementById('degree2').value=data['degree2']||'Not found'
+            document.getElementById('passOutYear2').value=data['passOutYear2']||'Not found'
+            document.getElementById('percentage2').value=data['percentage2']||'Not found'
+            document.getElementById('countryCode').value=data['countryCode']||'Not found'
 
             document.getElementById("skillsSection").style.display = 'block';
 
@@ -87,7 +106,10 @@ function toggleInput(event) {
     input.focus();  // Focus on input field for editing
 }
 function resetFormFields(){
-    const fields = ['email', 'jobTitle', 'currentOrganization', 'programming_languages', 'frontend_skills', 'backend_skills', 'databases', 'other_skills', 'name', 'college', 'degree1', 'passOutYear', 'yearsOfExp', 'phoneNo'];
+    const fields = ['email', 'jobTitle', 
+        'currentOrganization', 'programming_languages', 'frontend_skills', 
+        'backend_skills', 'databases', 'other_skills', 'name', 'college', 'degree1','percentage1',
+         'passOutYear1', 'yearsOfExp', 'phoneNo','summary','college2','degree2','passOutYear2','percentage2','countryCode'];
     fields.forEach(field=>{
         document.getElementById(field).value=""
     })
@@ -115,21 +137,22 @@ document.getElementById("uploadForm").addEventListener('submit',async function (
     try{
         const [response1,response2]= await Promise.all
         ([fetch('/parse-resume',{method:'POST',body:formData}),
-        // fetch("http://192.168.10.130:5000/extract",{method:'POST',body:formData})
+        fetch("http://192.168.10.130:5000/extract",{method:'POST',body:formData})
     ]);
 
         if(!response1.ok){
             throw new Error(`HTTP error! status: ${response1.status}`)
         }
-        // if(!response2.ok){
-        //     throw new Error(`HTTP error! status: ${response2.status}`)
-        // }
+        if(!response2.ok){
+            throw new Error(`HTTP error! status: ${response2.status}`)
+        }
         const result1= await response1.json()
-        // const result2=await response2.json()
+        const result2=await response2.json()
         console.log(result1)
-        // console.log(result2)
+        console.log(result2)
 
         document.getElementById('results').style.display='block';
+
         document.getElementById('email').value=result1['Email'] || "Not Found"
         document.getElementById('jobTitle').value=result1['Job title'] || "Not found";
         document.getElementById('currentOrganization').value=result1['Current organization']|| "Not found"
@@ -138,18 +161,20 @@ document.getElementById("uploadForm").addEventListener('submit',async function (
         document.getElementById('backend_skills').value=result1['backend_skills']||"Not found"
         document.getElementById('databases').value=result1['databases']||'Not found'
         document.getElementById('other_skills').value=result1['other_skills']||'Not found'
-        // document.getElementById('name').value=result2['name'] || "Not found"
-        // document.getElementById("college").value=result2['college']||"Not found"
-        // document.getElementById('degree1').value=result2['degree1'] || "Not found"
-        // document.getElementById('degree2').value=result2['degree2'] || "Not found"
-        // document.getElementById('passOutYear').value=result2['passOutYear'] ||"Not found"
-        // document.getElementById('phoneNo').value=result2['phoneNo'] ||"Not found"
-        // document.getElementById('yearsOfExp').value=result2['yearsOfExp']||"Not found"
-        // document.getElementById('summary').value=result2['summary']||'Not found'
-        // document.getElementById('college2').value=result2['degree2']['college2']||'Not found'
-        // document.getElementById('degree2').value=result2['degree2']['degre2']||'Not found'
-        // document.getElementById('passOutYear2').value=result2['degree2']['passOutYear']||'Not found'
-        // document.getElementById('percentage').value=result2['degree2']['percentage']||'Not found'
+
+        document.getElementById('name').value=result2['name'] || "Not found"
+        document.getElementById("college").value=result2['college']||"Not found"
+        document.getElementById('degree1').value=result2['degree'] || "Not found"
+        document.getElementById('percentage1').value=result2['percentage1']||'Not found'
+        document.getElementById('passOutYear1').value=result2['passOutYear1'] ||"Not found"
+        document.getElementById('phoneNo').value=result2['phoneNo'] ||"Not found"
+        document.getElementById('yearsOfExp').value=result2['yearsOfExp']||"Not found"
+        document.getElementById('summary').value=result2['summary']||'Not found'
+        document.getElementById('college2').value=result2['deg2list']['college2']||'Not found'
+        document.getElementById('degree2').value=result2['deg2list']['degree2']||'Not found'
+        document.getElementById('passOutYear2').value=result2['deg2list']['passOutYear2']||'Not found'
+        document.getElementById('percentage2').value=result2['deg2list']['percentage2']||'Not found'
+        document.getElementById("countryCode").value=result2['countryCode']||'Not found'
 
 
         document.getElementById("skillsSection").style.display='block'
@@ -163,7 +188,7 @@ document.getElementById("uploadForm").addEventListener('submit',async function (
     }finally{
         document.getElementById('loading').style.display='none'
         document.getElementById('searchForm').querySelector('button').disabled=false
-    }
+    }   
 
 })
 
@@ -171,17 +196,29 @@ document.getElementById("uploadForm").addEventListener('submit',async function (
 
 document.getElementById("editForm").addEventListener('submit',async function (event) {
     event.preventDefault()
-    // const formData=new FormData(event.target)
+    const formData=new FormData(event.target)
     const data={
         email:document.getElementById('email').value,
         jobTitle:document.getElementById('jobTitle').value,
-        currentOrganization:document.getElementById('currentOrganization').value,
+        organization:document.getElementById('currentOrganization').value,
+        pl:document.getElementById('programming_languages').value,
+        fs:document.getElementById('frontend_skills').value,
+        bs:document.getElementById('backend_skills').value,
+        ds:document.getElementById('databases').value,
+        os:document.getElementById('other_skills').value,
         name:document.getElementById('name').value,
-        college:document.getElementById("college").value,
-        degree:document.getElementById("degree").value,
-        passOutYear:document.getElementById('passOutYear').value,
+        college1:document.getElementById("college").value,
+        degree1:document.getElementById("degree1").value,
+        percentage1:document.getElementById('percentage1').value,
+        passOutYear1:document.getElementById('passOutYear1').value,
         phoneNo:document.getElementById('phoneNo').value,
-        yearsOfExp:document.getElementById('yearsOfExp').value
+        yearsOfExp:document.getElementById('yearsOfExp').value,
+        summary:document.getElementById('summary').value,
+        college2:document.getElementById('college2').value,
+        degree2:document.getElementById('degree2').value,
+        passOutYear2:document.getElementById('passOutYear2').value,
+        percentage2:document.getElementById('percentage2').value,
+        countryCode:document.getElementById('countryCode').value
     };
 
     try{

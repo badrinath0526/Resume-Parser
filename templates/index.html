@@ -1,151 +1,209 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="widt=device-width, initial-scale=1.0">
-        <title>Resume Parser</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    </head>
-<body>
-    <div class="container">
-        <div class="header-section">
-        <h2>Resume Parser</h2>
-        <form id="uploadForm" enctype="multipart/form-data">
-            <div class="file-input">
-                <label for="file">Upload your resume(PDF and Docx only):</label>
-                <input type="file" id="file" name="file" accept=".pdf,.docx" required >
-            </div>
-            <button type="submit" class="upload-btn">Upload and Parse</button>
-        </form>
-        <form id="searchForm" class="search-form">
-            <div class="search-input">
-                <!-- <label for="phoneNumber">Search by phone number:</label> -->
-                <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Enter phone number" class="search-bar">
-            </div>
-            <button type="submit" class="search-btn">Search</button>
-        </form>
-
-        <div class="loading" id="loading">
-            <span></span>
-        </div>
-    </div>
-    
-    <div class="content-section">
-    <div class="left-side">
-        <div class="results" id="results">
-            <!-- <h3>Parsed Results:</h3> -->
-            <form id="editForm">
-                <div class="result-row">
-                    <label for="name">Name:</label>
-                    <input type="text" id="name" name="name" />
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="widt=device-width, initial-scale=1.0">
+            <title>Resume Parser</title>
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+        </head>
+    <body>
+        <div class="container">
+            <div class="header-section">
+            <h2>Resume Parser</h2>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="file-input">
+                    <label for="file">Upload your resume(PDF and Docx only):</label>
+                    <input type="file" id="file" name="file" accept=".pdf,.docx" required >
                 </div>
-                <div class="result-row">
-                    <label for="phoneNo">Phone Number:</label>
-                    <input type="text" id="phoneNo" name="phoneNo" />
-                </div>
-                <div class="result-row">
-                    <label for="email">Email:</label>
-                    <input type="text" id="email" name="email" />
-                </div>
-                <div class="result-row">
-                    <label for="degree1">Highest Qualification:</label>
-                    <input type="text" id="degree1" name="degree1" />
-                </div>
-                <!-- <div class="result-row">
-                    <label for="degree2">Under Graduation:</label>
-                    <input type="text" id="degree2" name="degree2" />
-                </div> -->
-                <div class="result-row">
-                    <label for="passOutYear">Passout year:</label>
-                    <input type="text" id="passOutYear" name="passOutYear" />
-                </div>
-                <div class="result-row">
-                    <label for="college">College:</label>
-                    <input type="text" id="college" name="college" />
-                </div>
-                <div class="result-row">
-                    <label for="jobTitle">Job title:</label>
-                    <input type="text" id="jobTitle" name="jobTitle" />
-                </div>
-                <div class="result-row">
-                    <label for="yearsOfExp">Years of Experience:</label>
-                    <input type="text" id="yearsOfExp" name="yearsOfExp" />
-                </div>
-                <div class="result-row">
-                    <label for="currentOrganization">Current Organization:</label>
-                    <input type="text" id="currentOrganization" name="currentOrganization" />
-                </div>
-
-                <button type="submit" class="submit-btn">Submit</button>
+                <button type="submit" class="upload-btn">Upload and Parse</button>
             </form>
-        </div>
-        </div>
-    
-    <div class="right-side">
-        <div class="section" id="skillsSection" style="display: none;">
-        <h4>Skills <span class="toggle-symbol">(+)</span></h4>
-        <div class="section-content">
-            <div class="result-row">
-            <h5>Programming Languages:</h5>
-            <textarea type="text" name="programming_languages" id="programming_languages"></textarea>
-            </div>
-            <div class="result-row">
-            <h5>Frontend Skills:</h5>
-      
-            <textarea type="text" name="frontend_skills" id="frontend_skills"></textarea>
-            </div>
-            <div class="result-row">
-            <h5>Backend skills:</h5>
-      
-            <textarea type="text" name="backend_skills" id="backend_skills"></textarea>
-            </div>
-            <div class="result-row">
-            <h5>Databases:</h5>
-            
-            <textarea type="text" name="databases" id="databases"></textarea>
-            </div>
-            <div class="result-row">
-            <h5>Other skills</h5>
-            <textarea type="text" name="other_skills" id="other_skills"></textarea>
+            <form id="searchForm" class="search-form">
+                <div class="search-input">
+                    <!-- <label for="phoneNumber">Search by phone number:</label> -->
+                     <!-- <input type="text" id="countryCode" name="countryCode" placeholder="Country code" class="country-code"> -->
+                    <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Enter phone number" class="search-bar">
+                </div>
+                <button type="submit" class="search-btn">Search</button>
+            </form>
 
+            <div class="loading" id="loading">
+                <span></span>
             </div>
         </div>
-        </div>
-        <div class="section" id="profileSummarySection" style="display: none;">
-            <h4>Profile Summary <span class="toggle-symbol">(+)</span></h4>
-            <div class="section-content">
-                <div class="result-row">
-            <textarea type="text" name="summary" id="summary"></textarea>
+        
+        <div class="content-section">
+        <div class="left-side">
+            <div class="results" id="results">
+                <!-- <h3>Parsed Results:</h3> -->
+                <form id="editForm">
+                    <div class="result-row">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" />
+                    </div>
+                    <div class="phn-div">
+                    <div class="result-row">
+                        <label for="phoneNo">Phone Number:</label>
+                        <input type="text" id="phoneNo" name="phoneNo" />
+                    </div>
+                    <div class="result-row">
+                        <label for="countryCode">Country code:</label>
+                        <input type="text" id="countryCode" name="countryCode">
+                    </div>
+                    </div>
+                    
+                    <div class="result-row">
+                        <label for="email">Email:</label>
+                        <input type="text" id="email" name="email" />
+                    </div>
+                    <div class="result-row">
+                        <label for="degree1">Highest Qualification:</label>
+                        <input type="text" id="degree1" name="degree1" />
+                    </div>
+                    <!-- <div class="result-row">
+                        <label for="degree2">Under Graduation:</label>
+                        <input type="text" id="degree2" name="degree2" />
+                    </div> -->
+                    <div class="result-row">
+                        <label for="passOutYear1">Passout year:</label>
+                        <input type="text" id="passOutYear1" name="passOutYear1" />
+                    </div>
+                    <div class="result-row">
+                        <label for="college">College:</label>
+                        <input type="text" id="college" name="college" />
+                    </div>
+                    <div class="result-row">
+                        <label for="percentage1">Percentage</label>
+                        <input type="text" id="percentage1" name="percentage1">
+                    </div>
+                    <div class="result-row">
+                        <label for="jobTitle">Job title:</label>
+                        <input type="text" id="jobTitle" name="jobTitle" />
+                    </div>
+                    <div class="result-row">
+                        <label for="yearsOfExp">Years of Experience:</label>
+                        <input type="text" id="yearsOfExp" name="yearsOfExp" />
+                    </div>
+                    <div class="result-row">
+                        <label for="currentOrganization">Current Organization:</label>
+                        <input type="text" id="currentOrganization" name="currentOrganization" />
+                    </div>
+
+                    <button type="submit" class="submit-btn">Submit</button>
+                </form>
             </div>
-        </div>
-        </div>
-        <div class="section" id="educationSection" style="display: none;">
-            <h4>Education Details <span class="toggle-symbol">(+)</span></h4>
+            </div>
+        
+        <div class="right-side">
+            <div class="section" id="skillsSection" style="display: none;">
+            <h4>Skills <span class="toggle-symbol">(+)</span></h4>
             <div class="section-content">
                 <div class="result-row">
-                    <label for="college2">College:</label>
-                    <input type="text" name="college2" id="college2">
+                <h5>Programming Languages:</h5>
+                <textarea type="text" name="programming_languages" id="programming_languages"></textarea>
                 </div>
                 <div class="result-row">
-                    <label for="degree2">Degree:</label>
-                    <input type="text" name="degree2" id="degree2">
+                <h5>Frontend Skills:</h5>
+        
+                <textarea type="text" name="frontend_skills" id="frontend_skills"></textarea>
                 </div>
                 <div class="result-row">
-                    <label for="passOutYear2">Passout year:</label>
-                    <input type="text" name="passOutYear2" id="passOutYear2">
+                <h5>Backend skills:</h5>
+        
+                <textarea type="text" name="backend_skills" id="backend_skills"></textarea>
                 </div>
                 <div class="result-row">
-                    <label for="percentage">Percentage:</label>
-                    <input type="text" name="percentage" id="percentage">
-                </div>
+                <h5>Databases:</h5>
                 
+                <textarea type="text" name="databases" id="databases"></textarea>
+                </div>
+                <div class="result-row">
+                <h5>Other skills</h5>
+                <textarea type="text" name="other_skills" id="other_skills"></textarea>
+
+                </div>
             </div>
+            </div>
+            <div class="section" id="profileSummarySection" style="display: none;">
+                <h4>Profile Summary <span class="toggle-symbol">(+)</span></h4>
+                <div class="section-content">
+                    <div class="result-row">
+                <textarea type="text" name="summary" id="summary"></textarea>
+                </div>
+            </div>
+            </div>
+            <!-- <div class="section" id="educationSection" style="display: none;">
+                <h4>Education Details <span class="toggle-symbol">(+)</span></h4>
+                <div class="section-content">
+                    <div class="result-row">
+                        <label for="college2">College:</label>
+                        <input type="text" name="college2" id="college2">
+                    </div>
+                    <div class="result-row">
+                        <label for="degree2">Degree:</label>
+                        <input type="text" name="degree2" id="degree2">
+                    </div>
+                    <div class="result-row">
+                        <label for="passOutYear2">Passout year:</label>
+                        <input type="text" name="passOutYear2" id="passOutYear2">
+                    </div>
+                    <div class="result-row">
+                        <label for="percentage2">Percentage:</label>
+                        <input type="text" name="percentage2" id="percentage2">
+                    </div>
+                    
+                </div>
+            </div> -->
+            <div class="section" id="educationSection" style="display: none;">
+                <h4>Education Details <span class="toggle-symbol">(+)</span></h4>
+                <div class="section-content">
+                    <div class="education-table">
+                        <!-- First Row -->
+                        <div class="education-row">
+                            <div class="education-cell">
+                                <label>Degree:</label>
+                                <input type="text" name="degree1" id="degree1">
+                            </div>
+                            <div class="education-cell">
+                                <label>College:</label>
+                                <input type="text" name="college1" id="college">
+                            </div>
+                            <div class="education-cell">
+                                <label>Passout Year:</label>
+                                <input type="text" name="passOutYear1" id="passOutYear1">
+                            </div>
+                            <div class="education-cell">
+                                <label>Percentage:</label>
+                                <input type="text" name="percentage1" id="percentage1">
+                            </div>
+                        </div>
+            
+                        <!-- Second Row -->
+                        <div class="education-row">
+                            <div class="education-cell">
+                                <!-- <label>Degree:</label> -->
+                                <input type="text" name="degree2" id="degree2">
+                            </div>
+                            <div class="education-cell">
+                                <!-- <label>College:</label> -->
+                                <input type="text" name="college2" id="college2">
+                            </div>
+                            <div class="education-cell">
+                                <!-- <label>Passout Year:</label> -->
+                                <input type="text" name="passOutYear2" id="passOutYear2">
+                            </div>
+                            <div class="education-cell-small">
+                                <!-- <label>Percentage:</label> -->
+                                <input type="text" name="percentage2" id="percentage2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div> 
         </div>
-        </div>
-       </div> 
-    </div>
-    
-    <script src="{{url_for('static',filename='script.js')}}">
-    </script>
-</body>
-</html>
+        
+        <script src="{{url_for('static',filename='script.js')}}">
+        </script>
+    </body>
+    </html>

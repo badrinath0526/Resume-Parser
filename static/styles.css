@@ -240,3 +240,39 @@ h2{
     outline: none;
     box-shadow: 0 0 4px rgba(76,175,80,0.3);
 }
+
+/* .country-code{
+    width: 12%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+} */
+.phn-div{
+    display: flex;
+    flex-direction: row;
+}
+.education-table {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.education-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.education-cell {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.education-cell label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
